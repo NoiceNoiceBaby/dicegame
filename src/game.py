@@ -68,10 +68,10 @@ def player1Login():
             users = loginFile.readlines()
 
             for lines in users:
-                details = lines.split(",")
-                userPassword = details[1].split("\n")
+                userUsername = lines.split(",")
+                userPassword = userUsername[1].split("\n")
 
-                if details[0] == username:
+                if userUsername[0] == username:
                     if userPassword[0] == password:
                         print(f"welcome {username}")
                         validationLoop = False
@@ -135,10 +135,10 @@ def player2Login():
             users = loginFile.readlines()
 
             for lines in users:
-                details = lines.split(",")
-                userPassword = details[1].split("\n")
+                userUsername = lines.split(",")
+                userPassword = userUsername[1].split("\n")
 
-                if details[0] == username:
+                if userUsername[0] == username:
                     if userPassword[0] == password:
                         print(f"welcome {username}")
                         validationLoop = False
@@ -151,20 +151,28 @@ def player2Login():
         print("exiting player 2 login...\n")
         userInput = False
             
+######################################################################################################################################################
+# GAME FUNCTIONS
+######################################################################################################################################################
+def player1Game():
+    print("##### PLAYER 1 TURN #####")
 
 ######################################################################################################################################################
 # MAIN
 ######################################################################################################################################################
 def main():
-   print("########## DICE GAME ##########")
-   player1Login()
-   player2Login()
+    print("########## DICE GAME ##########")
+    # player login function calls
+    player1Login()
+    player2Login()
+    # game
+    player1Game()
 
 ######################################################################################################################################################
 # RUNNING MAIN FUNCTION
 ######################################################################################################################################################
 if __name__ == "__main__":
-   main()
+    main()
 
 ######################################################################################################################################################
 # END OF FILE

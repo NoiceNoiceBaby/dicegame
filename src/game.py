@@ -2,6 +2,21 @@
 # IMPORTS
 ######################################################################################################################################################
 import random # for choosing dice roll
+import time # for sleep
+from os import system, name # for clearing terminal screen
+
+######################################################################################################################################################
+# SYSTEM
+######################################################################################################################################################
+def clearScreen():
+    # if the system which the code is being ran on is a windows one
+    if name == "nt":
+        _ = system('cls')
+    # if the system which the code is being ran on is a linux/mac one
+    else:
+        _ = system('clear')
+
+# credits: https://www.geeksforgeeks.org/clear-screen-python/
 
 ######################################################################################################################################################
 # LIST AND DICTIONARY DECLARATION
@@ -24,7 +39,10 @@ def rules():
     print("7.) if both players have the same score at the end of the 5 rounds, they each roll 1 die and whoever gets the highest score wins (this repeats until someone wins)\n")
     print()
 
+    time.sleep(3)
+    
     print("returning to main menu...\n")
+    clearScreen()
     mainMenu()
 
 
@@ -51,7 +69,10 @@ def viewHighScores():
     print(f"fifth - {HIGHSCORES[4][0]} with a score of {HIGHSCORES[4][1]}\n")
     print()
     
+    time.sleep(3)
+
     print("returning to main menu...\n")
+    clearScreen()
     mainMenu()
 
 
@@ -66,17 +87,22 @@ def mainMenu():
         userInput = int(input("enter the number of your choice\n"))
 
         if userInput == 1:
+            clearScreen()
             break
         elif userInput == 2:
+            clearScreen()
             viewHighScores()
             break
         elif userInput == 3:
+            clearScreen()
             rules()
             break
         elif userInput == 4:
+            clearScreen()
             exit()
         else:
             print("error - invalid input\n")
+            clearScreen()
             continue
 
 ######################################################################################################################################################
@@ -85,6 +111,7 @@ def mainMenu():
 def createUser():
     createUserLoop = True
     while createUserLoop:
+        clearScreen()
         username = input("enter your username for the new user\n")
         password = input("enter your password for the new user\n")
 
@@ -94,8 +121,10 @@ def createUser():
             if confirmPassword == "yes":
                 createUserLoop = False
             else:
+                clearScreen()
                 continue
         else:
+            clearScreen()
             continue
         
         loginFile = open("assets\logins.txt", "a")
@@ -106,10 +135,12 @@ def createUser():
         loginFile.close()
 
         print(f"{username} has been validated\n")
+        time.sleep(0.5)
 
 def defaultLogin():
     validationLoop = True
     while validationLoop:
+        clearScreen()
         username = input("enter player username\n")
         password = input("enter player password\n")
 
@@ -133,9 +164,16 @@ def defaultLogin():
             if userUsername[0] == username:
                 if userPassword[0] == password:
                     print(f"welcome {username}")
+                    time.sleep(0.5)
                     validationLoop = False
                 else:
                     print("incorrect password\n")
+                    clearScreen()
+                    continue
+            else:
+                print("incorrect username\n")
+                clearScreen()
+                continue
 
         loginFile.close()
         validationLoop = False
@@ -144,6 +182,7 @@ def defaultLogin():
 
 def player1Login():
     while True:
+        clearScreen()
         print("##### PLAYER 1 LOGIN #####")
         print("1. create new user\n")
         print("2. use existing user\n")
@@ -154,9 +193,11 @@ def player1Login():
             
             userInput = input("would you like to create another user? yes or no?\n")
             while userInput == "yes":
+                clearScreen()
                 createUser()
                 userInput = input("would you like to create another user? yes or no?\n")
                 if userInput != "yes":
+                    clearScreen()
                     break
             
             defaultLogin()
@@ -171,6 +212,7 @@ def player1Login():
 
 def player2Login():
     while True:
+        clearScreen()
         print("##### PLAYER 2 LOGIN #####")
         print("1. create new user\n")
         print("2. use existing user\n")
@@ -181,9 +223,11 @@ def player2Login():
             
             userInput = input("would you like to create another user? yes or no?\n")
             while userInput == "yes":
+                clearScreen()
                 createUser()
                 userInput = input("would you like to create another user? yes or no?\n")
                 if userInput != "yes":
+                    clearScreen()
                     break
             
             defaultLogin()
@@ -199,6 +243,7 @@ def player2Login():
 # GAME FUNCTIONS
 ######################################################################################################################################################
 def player1Game():
+    clearScreen()
     print("##### PLAYER 1 TURN #####")
 
 ######################################################################################################################################################

@@ -242,9 +242,52 @@ def player2Login():
 ######################################################################################################################################################
 # GAME FUNCTIONS
 ######################################################################################################################################################
+def scoreSystem(score):
+    if score % 2 == 0:
+        score = score + 10
+    else:
+        score = score - 5 
+        if score < 0:
+            score = score + 5
+    
+    return score
+
+def rounds():
+    clearScreen()
+    print("ready to roll the dice!\n")
+    
+    diceRoll = random.choice(DICE)
+
+    while diceRoll == 6:
+        diceRoll = random.choice(DICE)
+        if diceRoll !=6:
+            break
+    
+    scoreSystem(diceRoll)
+
 def player1Game():
     clearScreen()
     print("##### PLAYER 1 TURN #####")
+    
+    roundCount = 0
+    while roundCount > 6:
+        rounds()
+        roundCount = roundCount + 1
+    
+    clearScreen()
+    #print(f"player 1 finished wiht a score of {score}\n")
+
+def player2Game():
+    clearScreen()
+    print("##### PLAYER 2 TURN #####")
+    
+    roundCount = 0
+    while roundCount > 6:
+        rounds()
+        roundCount = roundCount + 1
+    
+    clearScreen()
+    #print(f"player 2 finished with a score of {score}\n")
 
 ######################################################################################################################################################
 # MAIN

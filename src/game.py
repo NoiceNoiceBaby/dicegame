@@ -19,7 +19,7 @@ def clearScreen():
 # credits: https://www.geeksforgeeks.org/clear-screen-python/
 
 ######################################################################################################################################################
-# LIST AND DICTIONARY DECLARATION
+# LIST DECLARATION
 ######################################################################################################################################################
 DICE = [1, 2, 3, 4, 5, 6]
 
@@ -56,7 +56,7 @@ def viewHighScores():
         scores = lines.rstrip("\n") # removes \n
         scores = lines.split(",")
 
-        scores[1] = int(scores[1]) # casting the scores into integers
+        scores[1] = int(scores[1]) # casting the scores into integers so they can be sorted accordingly
         
         HIGHSCORES.append(scores)
     

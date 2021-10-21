@@ -264,7 +264,7 @@ def scoreSystem(score):
 def submitScore(score):
     clearScreen()
     
-    score = str(score) # cast score to an integer so it can be appended to the file
+    score = str(score) # cast score to a string so it can be appended to the file
     username = input("which display name do you want in the highscores file?\n")
 
     highScoreFile = open("assets\highscores.txt", "a") 

@@ -184,8 +184,8 @@ def player1Login():
     while True:
         clearScreen()
         print("##### PLAYER 1 LOGIN #####")
-        print("1. create new user\n")
-        print("2. use existing user\n")
+        print("1.) create new user\n")
+        print("2.) use existing user\n")
         userInput = int(input("enter the number of your choice\n"))
 
         if userInput == 1:
@@ -214,8 +214,8 @@ def player2Login():
     while True:
         clearScreen()
         print("##### PLAYER 2 LOGIN #####")
-        print("1. create new user\n")
-        print("2. use existing user\n")
+        print("1.) create new user\n")
+        print("2.) use existing user\n")
         userInput = int(input("enter the number of your choice\n"))
 
         if userInput == 1:
@@ -243,52 +243,134 @@ def player2Login():
 # GAME FUNCTIONS
 ######################################################################################################################################################
 def scoreSystem(score):
+    diceRoll = random.choice(DICE)
+    
+    while diceRoll == 6:
+        diceRoll = random.choice(DICE)
+        if diceRoll != 6:
+            break
+
+    score = score + diceRoll
+    
     if score % 2 == 0:
         score = score + 10
     else:
-        score = score - 5 
+        score = score - 5
         if score < 0:
             score = score + 5
     
     return score
 
-def rounds():
+def submitScore(score):
     clearScreen()
-    print("ready to roll the dice!\n")
     
-    diceRoll = random.choice(DICE)
+    score = str(score) # cast score to an integer so it can be appended to the file
+    username = input("which display name do you want in the highscores file?\n")
 
-    while diceRoll == 6:
-        diceRoll = random.choice(DICE)
-        if diceRoll !=6:
-            break
-    
-    scoreSystem(diceRoll)
+    highScoreFile = open("assets\highscores.txt", "a") 
+    highScoreFile.write(username)
+    highScoreFile.write(",")
+    highScoreFile.write(score)
+    highScoreFile.write("\n") # .write() function only accepts 1 argument... pain
+    highScoreFile.close()
+
+    userInput = input("would you like to see the top 5 scores? yes or no?\n")
+
+    if userInput == "yes":
+        viewHighScores()
+    else:
+        print("thank you for playing the dice game!\n")
+
 
 def player1Game():
     clearScreen()
-    print("##### PLAYER 1 TURN #####")
-    
-    roundCount = 0
-    while roundCount > 6:
-        rounds()
-        roundCount = roundCount + 1
-    
-    clearScreen()
-    #print(f"player 1 finished wiht a score of {score}\n")
+    print("##### PLAYER 1'S TURN #####\n")
 
+    player1Score = 0
+    roundCount = 1
+    
+    while roundCount < 6:
+        player1Score = scoreSystem(player1Score)
+        print(f"round {roundCount} complete! you finished this round with a score of {player1Score}!\n")
+        
+        time.sleep(1)
+        
+        global player1FinalScore
+        player1FinalScore = player1Score
+        
+        roundCount = roundCount + 1
+
+    time.sleep(3)
+    clearScreen()
+    
 def player2Game():
     clearScreen()
-    print("##### PLAYER 2 TURN #####")
-    
-    roundCount = 0
-    while roundCount > 6:
-        rounds()
-        roundCount = roundCount + 1
-    
-    clearScreen()
-    #print(f"player 2 finished with a score of {score}\n")
+    print("##### PLAYER 2'S TURN #####\n")
 
+    player2Score = 0
+    roundCount = 1
+    
+    while roundCount < 6:
+        player2Score = scoreSystem(player2Score)
+        print(f"round {roundCount} complete! you finished this round with a score of {player2Score}!\n")
+        
+        time.sleep(1)
+        
+        global player2FinalScore
+        player2FinalScore = player2Score
+        
+        roundCount = roundCount + 1
+
+    time.sleep(3)
+    clearScreen()
+
+def postGame():
+    clearScreen()
+    print("##### POST GAME SCREEN #####")
+    
+    if player1FinalScore > player2FinalScore:
+        print("congratulations! player 1 won!\n")
+        
+        time.sleep(1.5)
+        
+        clearScreen()
+        submitScore(player1FinalScore)
+    
+    elif player2FinalScore > player1FinalScore:
+        print("congratulations! player 2 won!\n")
+
+        time.sleep(1.5)
+        
+        clearScreen()
+        submitScore(player2FinalScore)
+    
+    else:
+        player1Decider = scoreSystem(player1FinalScore)
+        player2Decider = scoreSystem(player2FinalScore)
+
+        if player1Decider > player2Decider:
+            print("after a close game, player 1 is the winner!\n")
+
+            time.sleep(1.5)
+        
+            clearScreen()
+            submitScore(player1Decider)
+
+        elif player2Decider > player1Decider:
+            print("after a close game, player 2 is the winner!\n")
+
+            time.sleep(1.5)
+        
+            clearScreen()
+            submitScore(player2Decider)
+        else:
+            print("unfortunate! both players tied!\n")
+            
+            time.sleep(1.5)
+            clearScreen()
+            
+            print("thank you for playing the dice game!\n")
+    
 ######################################################################################################################################################
 # MAIN
 ######################################################################################################################################################
@@ -300,6 +382,8 @@ def main():
     player2Login()
     # game function calls
     player1Game()
+    player2Game()
+    postGame()
 
 ######################################################################################################################################################
 # RUNNING MAIN FUNCTION

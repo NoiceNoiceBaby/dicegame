@@ -164,9 +164,9 @@ def checkUser(username, password):
     loginFile = open("assets\logins.txt", "r")
     users = loginFile.readlines()
 
-    for i in HIGHSCORES:
-        del(HIGHSCORES[i])
-    
+    USERNAMES.clear()
+    PASSWORDS.clear()
+
     if username in USERNAMES_IN_USE:
         print("user already in use\n")
         time.sleep(0.5)

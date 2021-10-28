@@ -160,7 +160,7 @@ def createUser():
             break
             
 def checkUser(username, password):
-    loginFile = open("assets\logins.txt", "a+")
+    loginFile = open("assets\logins.txt", "r")
     users = loginFile.readlines()
 
     for i in HIGHSCORES:
@@ -181,6 +181,8 @@ def checkUser(username, password):
             USERNAMES.append(user_name)
             PASSWORDS.append(user_password)
 
+        loginFile.close()
+        
         if username in USERNAMES:
             usernamePos = USERNAMES.index(username)
             
@@ -192,9 +194,15 @@ def checkUser(username, password):
                     USERNAMES_IN_USE.append(username)
                     time.sleep(0.5)
                     clearScreen()
+                    loginMenu()
+                else:
+                    print("incorrect password\n")
+                    time.sleep(0.5)
+                    clearScreen()
+                    loginMenu()
             
             except ValueError:
-                print("incorrect password\n")
+                print("password is non-existent\n")
                 time.sleep(0.5)
                 clearScreen()
                 loginMenu()
@@ -209,6 +217,7 @@ def checkUser(username, password):
 
 def player1Login():
     while True:
+        clearScreen()
         print("##### PLAYER 1 LOGIN #####")
     
         global player1Username, player1Password
@@ -230,6 +239,7 @@ def player1Login():
 
 def player2Login():
     while True:
+        clearScreen()
         print("##### PLAYER 2 LOGIN #####")
 
         global player2Username, player2Password
@@ -251,6 +261,7 @@ def player2Login():
 
 def loginMenu():
     print("##### LOGIN MENU #####\n")
+    
     print("1.) create user\n")
     print("2.) player 1 login\n")
     print("3.) player 2 login\n")

@@ -51,6 +51,7 @@ def rules():
 def viewHighScores():
     print("##### LEADERBOARD #####\n")
 
+    highScoresFile = open("assets\highscores.txt")
     highScores = highScoresFile.readlines()
 
     for lines in highScores:
@@ -113,8 +114,7 @@ def mainMenu():
 # LOGIN FUNCTIONS
 ######################################################################################################################################################
 def createUser():
-    createUserLoop = True
-    while createUserLoop:
+    while True:
         clearScreen()
         username = input("enter your username for the new user\n")
         password = input("enter your password for the new user\n")
@@ -123,7 +123,7 @@ def createUser():
         if confirmUsername == "yes":
             confirmPassword = input(f"is {password} your password? yes or no?\n")
             if confirmPassword == "yes":
-                createUserLoop = False
+                pass
             else:
                 clearScreen()
                 continue
@@ -131,21 +131,24 @@ def createUser():
             clearScreen()
             continue
         
-        loginFile = open("assets\logins.txt", "a+")
+        loginFile = open("assets\logins.txt", "r")
         users = loginFile.readlines()
 
         for lines in users:
             userInfo = lines.strip("\n").split(",")
 
             user_name = userInfo[0]
-
+            
             USERNAMES.append(user_name)
-                
+        
+        loginFile.close()
+
         if username in USERNAMES:
             print("username is already taken")
             time.sleep(0.5)
             continue
         else:
+            loginFile = open("assets\logins.txt", "a")
             loginFile.write(username)
             loginFile.write(",")
             loginFile.write(password)
@@ -154,11 +157,15 @@ def createUser():
             
             print(f"{username} has been validated\n")
             time.sleep(0.5)
+            break
             
 def checkUser(username, password):
     loginFile = open("assets\logins.txt", "a+")
     users = loginFile.readlines()
 
+    for i in HIGHSCORES:
+        del(HIGHSCORES[i])
+    
     if username in USERNAMES_IN_USE:
         print("user already in use\n")
         time.sleep(0.5)
@@ -223,7 +230,7 @@ def player1Login():
 
 def player2Login():
     while True:
-        print("##### PLAYER 1 LOGIN #####")
+        print("##### PLAYER 2 LOGIN #####")
 
         global player2Username, player2Password
         

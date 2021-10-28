@@ -3,25 +3,28 @@
 ######################################################################################################################################################
 import random # for choosing dice roll
 import time # for sleep
-from os import system, name # for clearing terminal screen
+import os # for clearing terminal screen and file checks
 
 ######################################################################################################################################################
-# SYSTEM
+# SYSTEM 
 ######################################################################################################################################################
 def clearScreen():
     # if the system which the code is being ran on is a windows one
-    if name == "nt":
-        _ = system('cls')
+    if os.name == "nt":
+        _ = os.system('cls')
     # if the system which the code is being ran on is a linux/mac one
     else:
         _ = system('clear')
-
-# credits: https://www.geeksforgeeks.org/clear-screen-python/
 
 ######################################################################################################################################################
 # LIST DECLARATION
 ######################################################################################################################################################
 DICE = [1, 2, 3, 4, 5, 6]
+
+USERNAMES = []
+PASSWORDS = []
+
+USERNAMES_IN_USE = []
 
 HIGHSCORES = []
 
@@ -37,7 +40,6 @@ def rules():
     print("5.) the score of a player cannot go below 0\n")
     print("6.) the person with the highest score at the end of 5 rounds wins\n")
     print("7.) if both players have the same score at the end of the 5 rounds, they each roll 1 die and whoever gets the highest score wins (this repeats until someone wins)\n")
-    print()
 
     time.sleep(3)
     
@@ -49,14 +51,13 @@ def rules():
 def viewHighScores():
     print("##### LEADERBOARD #####\n")
 
-    highScoreFile = open("assets\highscores.txt", "r") 
-    highScores = highScoreFile.readlines()
+    highScores = highScoresFile.readlines()
 
     for lines in highScores:
-        scores = lines.rstrip("\n") # removes \n
+        scores = lines.rstrip("\n") 
         scores = lines.split(",")
 
-        scores[1] = int(scores[1]) # casting the scores into integers so they can be sorted accordingly
+        scores[1] = int(scores[1]) 
         
         HIGHSCORES.append(scores)
     
@@ -67,7 +68,6 @@ def viewHighScores():
     print(f"third - {HIGHSCORES[2][0]} with a score of {HIGHSCORES[2][1]}\n")
     print(f"foruth - {HIGHSCORES[3][0]} with a score of {HIGHSCORES[3][1]}\n")
     print(f"fifth - {HIGHSCORES[4][0]} with a score of {HIGHSCORES[4][1]}\n")
-    print()
     
     time.sleep(3)
 
@@ -86,23 +86,27 @@ def mainMenu():
         print("4.) exit program\n")
         userInput = int(input("enter the number of your choice\n"))
 
-        if userInput == 1:
-            clearScreen()
-            break
-        elif userInput == 2:
-            clearScreen()
-            viewHighScores()
-            break
-        elif userInput == 3:
-            clearScreen()
-            rules()
-            break
-        elif userInput == 4:
-            clearScreen()
-            exit()
-        else:
-            print("error - invalid input\n")
-            clearScreen()
+        try:
+            if userInput == 1:
+                clearScreen()
+                break
+            elif userInput == 2:
+                clearScreen()
+                viewHighScores()
+                break
+            elif userInput == 3:
+                clearScreen()
+                rules()
+                break
+            elif userInput == 4:
+                clearScreen()
+                print("thank you for playing the dice game\n")
+                time.sleep(1)
+                exit()
+        
+        except ValueError:
+            print("invalid input\n")
+            time.sleep(0.5)
             continue
 
 ######################################################################################################################################################
@@ -127,118 +131,147 @@ def createUser():
             clearScreen()
             continue
         
-        loginFile = open("assets\logins.txt", "a")
-        loginFile.write(username)
-        loginFile.write(",")
-        loginFile.write(password)
-        loginFile.write("\n") # .write() function only accepts 1 argument... pain
-        loginFile.close()
-
-        print(f"{username} has been validated\n")
-        time.sleep(0.5)
-
-def defaultLogin():
-    validationLoop = True
-    while validationLoop:
-        clearScreen()
-        username = input("enter player username\n")
-        password = input("enter player password\n")
-
-        confirmUsername = input(f"is {username} your username? yes or no?\n")
-        if confirmUsername == "yes":
-            confirmPassword = input(f"is {password} your password? yes or no?\n")
-            if confirmPassword == "yes":
-                validationLoop = False
-            else:
-                continue
-        else:
-            continue
-    
-        loginFile = open("assets\logins.txt", "r")
+        loginFile = open("assets\logins.txt", "a+")
         users = loginFile.readlines()
 
         for lines in users:
-            userUsername = lines.split(",")
-            userPassword = userUsername[1].split("\n")
+            userInfo = lines.strip("\n").split(",")
 
-            if userUsername[0] == username:
-                if userPassword[0] == password:
+            user_name = userInfo[0]
+
+            USERNAMES.append(user_name)
+                
+        if username in USERNAMES:
+            print("username is already taken")
+            time.sleep(0.5)
+            continue
+        else:
+            loginFile.write(username)
+            loginFile.write(",")
+            loginFile.write(password)
+            loginFile.write("\n")
+            loginFile.close()
+            
+            print(f"{username} has been validated\n")
+            time.sleep(0.5)
+            
+def checkUser(username, password):
+    loginFile = open("assets\logins.txt", "a+")
+    users = loginFile.readlines()
+
+    if username in USERNAMES_IN_USE:
+        print("user already in use\n")
+        time.sleep(0.5)
+        loginMenu()
+        clearScreen()
+    else:
+        for lines in users:
+            userInfo = lines.strip("\n").split(",")
+
+            user_name = userInfo[0]
+            user_password = userInfo[1]
+
+            USERNAMES.append(user_name)
+            PASSWORDS.append(user_password)
+
+        if username in USERNAMES:
+            usernamePos = USERNAMES.index(username)
+            
+            try:
+                passwordPos = PASSWORDS.index(password)
+
+                if usernamePos == passwordPos:
                     print(f"welcome {username}")
+                    USERNAMES_IN_USE.append(username)
                     time.sleep(0.5)
-                    validationLoop = False
-                else:
-                    print("incorrect password\n")
                     clearScreen()
-                    continue
-            else:
-                print("incorrect username\n")
+            
+            except ValueError:
+                print("incorrect password\n")
+                time.sleep(0.5)
                 clearScreen()
-                continue
+                loginMenu()
 
-        loginFile.close()
-        validationLoop = False
-
-    print("exiting player login...\n")
+        else:
+            print("incorrect username\n")
+            time.sleep(0.5)
+            clearScreen()
+            loginMenu()
+    
+    loginFile.close()
 
 def player1Login():
     while True:
-        clearScreen()
         print("##### PLAYER 1 LOGIN #####")
-        print("1.) create new user\n")
-        print("2.) use existing user\n")
-        userInput = int(input("enter the number of your choice\n"))
+    
+        global player1Username, player1Password
+        
+        player1Username = input("enter player username\n")
+        player1Password = input("enter player password\n")
 
-        if userInput == 1:
-            createUser()
-            
-            userInput = input("would you like to create another user? yes or no?\n")
-            while userInput == "yes":
-                clearScreen()
-                createUser()
-                userInput = input("would you like to create another user? yes or no?\n")
-                if userInput != "yes":
-                    clearScreen()
-                    break
-            
-            defaultLogin()
-            break
-        elif userInput == 2:
-            defaultLogin()
-            break
+        confirmUsername = input(f"is {player1Username} your username? yes or no?\n")
+        if confirmUsername == "yes":
+            confirmPassword = input(f"is {player1Password} your password? yes or no?\n")
+            if confirmPassword == "yes":
+                checkUser(player1Username, player1Password)
+                break
+
+            else:
+                continue
         else:
-            print("invalid input - try again\n")
             continue
-
 
 def player2Login():
     while True:
-        clearScreen()
-        print("##### PLAYER 2 LOGIN #####")
-        print("1.) create new user\n")
-        print("2.) use existing user\n")
-        userInput = int(input("enter the number of your choice\n"))
+        print("##### PLAYER 1 LOGIN #####")
 
-        if userInput == 1:
-            createUser()
-            
-            userInput = input("would you like to create another user? yes or no?\n")
-            while userInput == "yes":
-                clearScreen()
-                createUser()
-                userInput = input("would you like to create another user? yes or no?\n")
-                if userInput != "yes":
-                    clearScreen()
-                    break
-            
-            defaultLogin()
-            break
-        elif userInput == 2:
-            defaultLogin()
-            break
+        global player2Username, player2Password
+        
+        player2Username = input("enter player username\n")
+        player2Password = input("enter player password\n")
+
+        confirmUsername = input(f"is {player2Username} your username? yes or no?\n")
+        if confirmUsername == "yes":
+            confirmPassword = input(f"is {player2Password} your password? yes or no?\n")
+            if confirmPassword == "yes":
+                checkUser(player2Username, player2Password)
+                break
+
+            else:
+                continue
         else:
-            print("invalid input - try again\n")
             continue
-            
+
+def loginMenu():
+    print("##### LOGIN MENU #####\n")
+    print("1.) create user\n")
+    print("2.) player 1 login\n")
+    print("3.) player 2 login\n")
+
+    userInput = int(input("enter a number of your choice\n"))
+
+    if userInput == 1:
+        clearScreen()
+        createUser()
+        userInput = input("would you like to create another user? yes or no?\n")
+
+        while userInput == "yes":
+            clearScreen()
+            createUser()
+            userInput = input("would you like to create another user? yes or no?\n")
+
+            if userInput != "yes":
+                clearScreen()
+                break
+        
+        loginMenu()
+    
+    elif userInput == 2:
+        player1Login()
+    
+    elif userInput == 3:
+        player2Login()
+
 ######################################################################################################################################################
 # GAME FUNCTIONS
 ######################################################################################################################################################
@@ -280,7 +313,6 @@ def submitScore(score):
         viewHighScores()
     else:
         print("thank you for playing the dice game!\n")
-
 
 def player1Game():
     clearScreen()
@@ -378,12 +410,11 @@ def main():
     # main menu function call
     mainMenu()
     # player login function calls
-    player1Login()
-    player2Login()
+    loginMenu()
     # game function calls
-    player1Game()
-    player2Game()
-    postGame()
+    #player1Game()
+    #player2Game()
+    #postGame()
 
 ######################################################################################################################################################
 # RUNNING MAIN FUNCTION

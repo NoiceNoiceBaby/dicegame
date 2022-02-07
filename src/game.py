@@ -41,7 +41,9 @@ def rules():
     print("6.) the person with the highest score at the end of 5 rounds wins\n")
     print("7.) if both players have the same score at the end of the 5 rounds, they each roll 1 die and whoever gets the highest score wins (this repeats until someone wins)\n")
 
-    time.sleep(3)
+    userInput = input("press enter when you're done\n")
+
+    time.sleep(0.5)
     
     print("returning to main menu...\n")
     clearScreen()
